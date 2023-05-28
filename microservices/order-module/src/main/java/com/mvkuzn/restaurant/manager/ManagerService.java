@@ -91,11 +91,22 @@ public class ManagerService {
                 var orders = orderRepository.findAll();
                 for (var item: orders) {
                     item.setStatus(OrderStatus.DONE);
+                    item.setUpdatedAt(new Date());
                     orderRepository.save(item);
                 }
             }
         };
         // Заказы будут готовы через 15 секунд после запуска этого метода.
         timer.schedule(task, 15000);
+    }
+
+    public AddDishResponse updateDish(UpdateDishRequest request) {
+        var dish = dishRepository.findById(request.getId()).orElseThrow();
+        dish.setQuantity(request.getQuantity());
+        dish.setUpdatedAt(new Date());
+        dishRepository.save(dish);
+        return AddDishResponse.builder()
+                .dish(dish)
+                .build();
     }
 }

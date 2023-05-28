@@ -26,6 +26,13 @@ public class OrderDishController {
         return ResponseEntity.ok(service.addOrder(request));
     }
 
+    @PostMapping("update/dish")
+    public ResponseEntity<Response> updateDish(
+            @RequestBody UpdateDishRequest request
+    ) {
+        return ResponseEntity.ok(service.updateDish(request));
+    }
+
     @GetMapping("/get-menu")
     public ResponseEntity<Response> getMenu() {
         return ResponseEntity.ok(service.getMenu());
