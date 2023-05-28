@@ -1,5 +1,6 @@
 package com.mvkuzn.restaurant.user;
 
+import com.mvkuzn.restaurant.session.Session;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +45,10 @@ public class User implements UserDetails {
 
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private List<Session> sessions;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

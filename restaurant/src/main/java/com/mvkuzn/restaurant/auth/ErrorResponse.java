@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse extends Response{
+public class ErrorResponse extends Response {
 
-    private String token;
+    private String message;
 }
