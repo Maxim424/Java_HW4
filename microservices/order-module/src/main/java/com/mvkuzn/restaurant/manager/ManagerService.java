@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 @RequiredArgsConstructor
@@ -22,26 +25,25 @@ public class ManagerService {
     private final OrderDishRepository orderDishRepository;
     private final UserRepository userRepository;
 
-    public StatusResponse addDish(AddDishRequest request) {
+    public AddDishResponse addDish(AddDishRequest request) {
         var dish = Dish.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())
                 .quantity(request.getQuantity())
-                .isAvailable(true)
+                .isAvailable(request.getAvailable())
                 .createdAt(new Date())
                 .updatedAt(new Date())
                 .build();
 
         dishRepository.save(dish);
-        return StatusResponse.builder()
-                .status("ok")
-                .message("Dish saved")
+        return AddDishResponse.builder()
+                .dish(dish)
                 .build();
     }
 
-    public StatusResponse addOrderDish(AddOrderDishRequest request) {
-        var user = userRepository.findByEmail(request.getEmail()).get();
+    public AddOrderResponse addOrder(AddOrderRequest request) {
+        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var order = Order.builder()
                 .userId(user.getId())
                 .status(OrderStatus.WAITING)
@@ -50,17 +52,50 @@ public class ManagerService {
                 .updatedAt(new Date())
                 .build();
         orderRepository.save(order);
-        var dish = dishRepository.findById(request.getDishId()).get();
-        var orderDish = OrderDish.builder()
-                .orderId(order.getId())
-                .dishId(request.getDishId())
-                .quantity(request.getQuantity())
-                .price(dish.getPrice())
+        var dishes = request.getDishes();
+        for (var item: dishes) {
+            var dish = dishRepository.findById(item.getId()).orElseThrow();
+            var orderDish = OrderDish.builder()
+                    .orderId(order.getId())
+                    .dishId(item.getId())
+                    .quantity(item.getQuantity())
+                    .price(item.getQuantity() * dish.getPrice())
+                    .build();
+            orderDishRepository.save(orderDish);
+        }
+        manageOrders();
+        return AddOrderResponse.builder()
+                .order(order)
                 .build();
-        orderDishRepository.save(orderDish);
-        return StatusResponse.builder()
-                .status("ok")
-                .message("Order created")
+    }
+
+    public GetMenuResponse getMenu() {
+        List<Dish> menu = dishRepository.findByIsAvailable(true).orElseThrow();
+        return GetMenuResponse.builder()
+                .menu(menu)
                 .build();
+    }
+
+    public GetOrderResponse getOrder(GetOrderRequest request) {
+        var order = orderRepository.findById(request.getId()).orElseThrow();
+        return GetOrderResponse.builder()
+                .order(order)
+                .build();
+    }
+
+    public void manageOrders() {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                var orders = orderRepository.findAll();
+                for (var item: orders) {
+                    item.setStatus(OrderStatus.DONE);
+                    orderRepository.save(item);
+                }
+            }
+        };
+        // Заказы будут готовы через 15 секунд после запуска этого метода.
+        timer.schedule(task, 15000);
     }
 }

@@ -73,8 +73,8 @@ public class AuthenticationService {
     }
 
     public UserInfoResponse getInfo(GetUserRequest request) {
-        var session = sessionRepository.findBySessionToken(request.getToken());
-        var user = userRepository.findById(session.get().getUserId()).get();
+        var session = sessionRepository.findBySessionToken(request.getToken()).orElseThrow();
+        var user = userRepository.findById(session.getUserId()).orElseThrow();
         return UserInfoResponse.builder()
                 .email(user.getEmail())
                 .username(user.getUsername())

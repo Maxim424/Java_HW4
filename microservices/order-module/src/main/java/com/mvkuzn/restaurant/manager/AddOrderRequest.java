@@ -5,15 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddDishRequest {
+public class AddOrderRequest {
 
-    private String name;
-    private String description;
-    private Integer price;
-    private Integer quantity;
-    private Boolean available;
+    private String email;
+    private List<DishQuantityForRequest> dishes;
+    private String specialRequests;
 }

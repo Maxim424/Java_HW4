@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddOrderDishRequest {
+public class DishQuantityForRequest {
 
-    private String email;
-    private String specialRequests;
-    private Integer dishId;
+    private Integer id;
     private Integer quantity;
 }

@@ -3,10 +3,7 @@ package com.mvkuzn.restaurant.manager;
 import com.mvkuzn.restaurant.auth.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/order")
@@ -15,17 +12,29 @@ public class OrderDishController {
 
     private final ManagerService service;
 
-    @PostMapping("/add_dish")
-    public ResponseEntity<Response> add_dish(
+    @PostMapping("add/dish")
+    public ResponseEntity<Response> addDish(
             @RequestBody AddDishRequest request
     ) {
         return ResponseEntity.ok(service.addDish(request));
     }
 
-    @PostMapping("/add_order_dish")
-    public ResponseEntity<Response> add_order_dish(
-            @RequestBody AddOrderDishRequest request
+    @PostMapping("add/order")
+    public ResponseEntity<Response> addOrderDish(
+            @RequestBody AddOrderRequest request
     ) {
-        return ResponseEntity.ok(service.addOrderDish(request));
+        return ResponseEntity.ok(service.addOrder(request));
+    }
+
+    @GetMapping("/get-menu")
+    public ResponseEntity<Response> getMenu() {
+        return ResponseEntity.ok(service.getMenu());
+    }
+
+    @GetMapping("/get-order")
+    public ResponseEntity<Response> getOrder(
+            @RequestBody GetOrderRequest request
+    ) {
+        return ResponseEntity.ok(service.getOrder(request));
     }
 }

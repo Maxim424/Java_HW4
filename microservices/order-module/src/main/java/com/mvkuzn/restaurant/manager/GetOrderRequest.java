@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddDishRequest {
+public class GetOrderRequest {
 
-    private String name;
-    private String description;
-    private Integer price;
-    private Integer quantity;
-    private Boolean available;
+    private Integer id;
 }

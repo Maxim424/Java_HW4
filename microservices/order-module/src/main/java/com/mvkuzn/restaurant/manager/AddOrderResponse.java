@@ -1,6 +1,7 @@
 package com.mvkuzn.restaurant.manager;
 
 import com.mvkuzn.restaurant.auth.Response;
+import com.mvkuzn.restaurant.order.Order;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -8,8 +9,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StatusResponse extends Response {
+public class AddOrderResponse extends Response {
 
-    private String status;
-    private String message;
+    private Order order;
 }
