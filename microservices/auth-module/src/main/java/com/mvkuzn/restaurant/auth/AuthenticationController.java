@@ -40,7 +40,7 @@ public class AuthenticationController {
         }
     }
 
-    @GetMapping("/user_info")
+    @GetMapping("/user-info")
     public ResponseEntity<Response> userInfo(
             @RequestBody GetUserRequest request
     ) {
